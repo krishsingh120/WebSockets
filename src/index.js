@@ -12,7 +12,6 @@ const httpServer = http.createServer(app);
 // Attach Socket.IO to same server
 const io = new Server(httpServer);
 
-// Middlewares setup
 app.use("/", express.static(path.join(__dirname, "../public")));
 
 io.on("connection", (socket) => {
