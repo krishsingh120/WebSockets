@@ -3,6 +3,8 @@ const { Server } = require("socket.io");
 const path = require("path");
 const http = require("http");
 
+const socketAdminUi = require("./config/socketUiConfig");
+
 const app = express();
 const PORT = 3000;
 
@@ -10,7 +12,12 @@ const PORT = 3000;
 const httpServer = http.createServer(app);
 
 // Attach Socket.IO to same server
-const io = new Server(httpServer);
+const io = new Server(httpServer, {
+  cors: {
+    origin: ["https://admin.socket.io"],
+    credentials: true,
+  },
+});
 
 app.use("/", express.static(path.join(__dirname, "../public")));
 
@@ -40,4 +47,7 @@ app.get("/health", (req, res) => {
 
 httpServer.listen(PORT, () => {
   console.log(`Server is listening on http://localhost:${PORT}`);
+  socketAdminUi(io);
+  console.log(`Socket UI -> is listening on https://admin.socket.io`);
+
 });
